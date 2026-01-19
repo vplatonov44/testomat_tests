@@ -1,1 +1,5 @@
 .idea
+# SSH keys
+ssh_key_*
+*.pub
+.ssh/
