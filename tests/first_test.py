@@ -2,34 +2,58 @@ from playwright.sync_api import Page, expect
 
 
 def test_login_with_invalid_creds(page: Page):
-    page.goto("https://testomat.io")
+    open_home_page(page)
 
     expect(page.locator("[href*='sign_in'].login-item")).to_be_visible()
-
-    expect(page.get_by_text("Log in", exact=True)).to_be_visible()
 
     page.get_by_text("Log in", exact=True).click()
 
     # page.get_by_role("textbox", name="name@email.com")
-    page.locator("#content-desktop #user_email").fill("ceopltn@gmail.com")
-    page.locator("#content-desktop #user_password").fill("asddad")
-    page.get_by_role("button", name="Sign in").click()
+    login_user(page, "ceopltn@gmail.com", "zxzxcxzxzcczx")
 
     expect(page.locator("#content-desktop").get_by_text("Invalid Email or password.")).to_be_visible()
     expect(page.locator("#content-desktop .common-flash-info")).to_have_text("Invalid Email or password.")
 
 
 def test_search_project_in_company(page: Page):
-    page.goto("https://testomat.io")
+    page.goto("https://testomat.io/users/sign_in")
 
-    page.get_by_text("Log in", exact=True).click()
+    login_user(page, "ceopltn@gmail.com", "asdasdasda")
 
-    page.locator("#content-desktop #user_email").fill("ceopltn@gmail.com")
-    page.locator("#content-desktop #user_password").fill("N3jtenjzpR6otQ")
-    page.get_by_role("button", name="Sign in").click()
+    target_project = "PLY"
 
-    target_project = "Manufacture light"
+    search_for_project(page, target_project)
+
+    expect(page.get_by_role("heading", name=target_project)).to_be_visible()
+
+
+def test_should_be_possible_to_open_free_project(page: Page):
+    #arrange
+    page.goto("https://app.testomat.io/users/sign_in")
+    login_user(page, "ceopltn@gmail.com", "N3jtenjzpR6otQ")
+
+    #act
+    page.locator("#company_id").click()
+    page.locator("#company_id").select_option("Free Projects")
+
+    #assert
+    target_project = "PLY"
+    search_for_project(page, target_project)
+    expect(page.get_by_role("heading", name=target_project)).to_be_hidden()
+
+    expect(page.get_by_text("You have not created any projects yet")).to_be_visible(timeout=10000)
+
+
+def search_for_project(page: Page, target_project: str):
     expect(page.get_by_role("searchbox", name="Search")).to_be_visible()
     page.locator("#content-desktop #search").fill(target_project)
 
-    expect(page.get_by_role("heading", name=target_project).first).to_be_visible()
+
+def open_home_page(page: Page):
+    page.goto("https://testomat.io")
+
+
+def login_user(page: Page, email: str, password: str):
+    page.locator("#content-desktop #user_email").fill(email)
+    page.locator("#content-desktop #user_password").fill(password)
+    page.get_by_role(role="button", name="Sign in").click()
