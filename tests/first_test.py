@@ -1,4 +1,9 @@
+import os
+
+from dotenv import load_dotenv
 from playwright.sync_api import Page, expect
+
+load_dotenv()
 
 
 def test_login_with_invalid_creds(page: Page):
@@ -9,16 +14,16 @@ def test_login_with_invalid_creds(page: Page):
     page.get_by_text("Log in", exact=True).click()
 
     # page.get_by_role("textbox", name="name@email.com")
-    login_user(page, "ceopltn@gmail.com", "zxzxcxzxzcczx")
+    login_user(page, os.getenv("email"), "zxzxcxzxzcczx")
 
     expect(page.locator("#content-desktop").get_by_text("Invalid Email or password.")).to_be_visible()
     expect(page.locator("#content-desktop .common-flash-info")).to_have_text("Invalid Email or password.")
 
 
 def test_search_project_in_company(page: Page):
-    page.goto("https://testomat.io/users/sign_in")
+    page.goto(f"{os.getenv("BASE_APP_URL")}/users/sign_in")
 
-    login_user(page, "ceopltn@gmail.com", "ololo")
+    login_user(page, os.getenv("EMAIL"), os.getenv("password"))
 
     target_project = "PLY"
 
@@ -28,15 +33,15 @@ def test_search_project_in_company(page: Page):
 
 
 def test_should_be_possible_to_open_free_project(page: Page):
-    #arrange
-    page.goto("https://app.testomat.io/users/sign_in")
-    login_user(page, "ceopltn@gmail.com", "ololo")
+    # arrange
+    page.goto(f"{os.getenv("BASE_APP_URL")}/users/sign_in")
+    login_user(page, os.getenv("EMAIL"), os.getenv("password"))
 
-    #act
+    # act
     page.locator("#company_id").click()
     page.locator("#company_id").select_option("Free Projects")
 
-    #assert
+    # assert
     target_project = "PLY"
     search_for_project(page, target_project)
     expect(page.get_by_role("heading", name=target_project)).to_be_hidden()
@@ -50,10 +55,15 @@ def search_for_project(page: Page, target_project: str):
 
 
 def open_home_page(page: Page):
-    page.goto("https://testomat.io")
+    page.goto(os.getenv("BASE_URL"))
 
 
 def login_user(page: Page, email: str, password: str):
     page.locator("#content-desktop #user_email").fill(email)
     page.locator("#content-desktop #user_password").fill(password)
     page.get_by_role(role="button", name="Sign in").click()
+
+
+time
+video
+15: 58
