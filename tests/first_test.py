@@ -18,7 +18,7 @@ def test_login_with_invalid_creds(page: Page):
 def test_search_project_in_company(page: Page):
     page.goto("https://testomat.io/users/sign_in")
 
-    login_user(page, "ceopltn@gmail.com", "asdasdasda")
+    login_user(page, "ceopltn@gmail.com", "ololo")
 
     target_project = "PLY"
 
@@ -30,7 +30,7 @@ def test_search_project_in_company(page: Page):
 def test_should_be_possible_to_open_free_project(page: Page):
     #arrange
     page.goto("https://app.testomat.io/users/sign_in")
-    login_user(page, "ceopltn@gmail.com", "N3jtenjzpR6otQ")
+    login_user(page, "ceopltn@gmail.com", "ololo")
 
     #act
     page.locator("#company_id").click()
