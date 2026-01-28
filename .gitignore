@@ -3,3 +3,5 @@
 ssh_key_*
 *.pub
 .ssh/
+.env
+.venv
